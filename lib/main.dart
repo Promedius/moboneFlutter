@@ -5,27 +5,32 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: ImageUploader(),
     );
   }
 }
 
 class ImageUploader extends StatefulWidget {
+  const ImageUploader({super.key});
+
   @override
-  _ImageUploaderState createState() => _ImageUploaderState();
+  State<ImageUploader> createState() => _ImageUploaderState();
 }
 
 class _ImageUploaderState extends State<ImageUploader> {
   XFile? _image;
   final ImagePicker _picker = ImagePicker();
   Uint8List? _outputImage;
+  bool _isUploading = false;
 
   Future<void> _getImageFromCamera() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
@@ -44,6 +49,9 @@ class _ImageUploaderState extends State<ImageUploader> {
   }
 
   Future<void> _uploadImage() async {
+    setState(() {
+      _isUploading = true;
+    });
     // API Endpoint
     Uri uri = Uri.parse("http://35.223.91.153:8000/run");
 
@@ -57,6 +65,7 @@ class _ImageUploaderState extends State<ImageUploader> {
       var output = await response.stream.toBytes();
       setState(() {
         _outputImage = output;
+        _isUploading = false;
       });
     }
   }
@@ -72,11 +81,11 @@ class _ImageUploaderState extends State<ImageUploader> {
           child: Column(
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.camera_alt),
+                icon: const Icon(Icons.camera_alt),
                 onPressed: _getImageFromCamera,
               ),
               IconButton(
-                icon: Icon(Icons.photo),
+                icon: const Icon(Icons.photo),
                 onPressed: _getImageFromGallery,
               ),
               _image == null
@@ -86,9 +95,11 @@ class _ImageUploaderState extends State<ImageUploader> {
                 onPressed: _uploadImage,
                 child: const Text('Upload Image'),
               ),
-              _outputImage == null
-                  ? const Text('No output image yet.')
-                  : Image.memory(_outputImage!),
+              _isUploading
+                  ? const CircularProgressIndicator()
+                  : _outputImage == null
+                      ? const Text('No output image yet.')
+                      : Image.memory(_outputImage!),
             ],
           ),
         ),
