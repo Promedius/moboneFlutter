@@ -1,16 +1,16 @@
 # mobone
-
-A new Flutter project.
+Mobile 에서 Bone suppression 모델을 수행하는 Client
 
 ## Getting Started
+flutter run 으로 실행
 
-This project is a starting point for a Flutter application.
+## Upload
+- 실제 폰에 올릴 때 케이블 연결없이 단독 구동하려면 --release 옵션을 추가한다.
+```
+flutter run -d <device_id> --release
+```
 
-A few resources to get you started if this is your first Flutter project:
+- 실제 폰을 연결하고 flutter run 을 하면 device_id 를 알 수 있다.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 주의사항
+- iOS simulator 에선 카메라가 작동하지 않음
