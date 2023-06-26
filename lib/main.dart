@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:image/image.dart' as img;
 void main() {
   runApp(const MyApp());
 }
@@ -53,12 +53,20 @@ class _ImageUploaderState extends State<ImageUploader> {
       _isUploading = true;
     });
     // API Endpoint
-    Uri uri = Uri.parse("http://35.223.91.153:8000/run");
+    Uri uri = Uri.parse("http://35.193.54.6:8000/run");
 
     var request = http.Request('POST', uri);
     request.headers['Content-Type'] = 'application/octet-stream';
-    request.bodyBytes = await _image!.readAsBytes();
+    
+      // 이미지 로드
+    img.Image? image = img.decodeImage(File(_image!.path).readAsBytesSync());
 
+    // EXIF 회전 정보 가져오기
+    img.Image? orientedImage = img.bakeOrientation(image!);
+
+    // 이미지 회전된 상태로 업로드
+    request.bodyBytes = img.encodePng(orientedImage);
+    
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
