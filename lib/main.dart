@@ -37,6 +37,7 @@ class _ImageUploaderState extends State<ImageUploader> {
 
     setState(() {
       _image = pickedFile;
+      _uploadImage();
     });
   }
 
@@ -45,6 +46,7 @@ class _ImageUploaderState extends State<ImageUploader> {
 
     setState(() {
       _image = pickedFile;
+      _uploadImage();
     });
   }
 
@@ -99,10 +101,6 @@ class _ImageUploaderState extends State<ImageUploader> {
               _image == null
                   ? const Text('No image selected.')
                   : Image.file(File(_image!.path)),
-              TextButton(
-                onPressed: _uploadImage,
-                child: const Text('Upload Image'),
-              ),
               _isUploading
                   ? const CircularProgressIndicator()
                   : _outputImage == null
